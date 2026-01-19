@@ -1,0 +1,10 @@
+torch
+torchvision
+torchaudio
+gradio
+git+https://github.com/ai-forever/VIBE
+pillow
+huggingface_hub
+accelerate
+diffusers
+transformers
