@@ -4,7 +4,7 @@ A local Gradio Web-UI for the [VIBE model](https://huggingface.co/iitolstykh/VIB
 
 **Tested on Windows 11 with NVIDIA RTX 5090 (Blackwell architecture).**
 
-![Preview](preview.png)
+![Preview](preview2.png)
 *(Run your own local instance with full privacy and speed)*
 
 ## ✨ Features
