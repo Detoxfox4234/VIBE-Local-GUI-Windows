@@ -8,10 +8,11 @@ A local Gradio Web-UI for the [VIBE model](https://huggingface.co/iitolstykh/VIB
 *(Run your own local instance with full privacy and speed)*
 
 ## ✨ Features
-- 🚀 **Runs Locally:** fast, private, and no limits.
+- 🚀 **Runs Locally:** Fast, private, and no limits.
 - 🎛️ **Full Control:** Adjust `Sample Steps`, `Seed`, `Guidance Scale`, and `Image Guidance`.
 - 💾 **Auto-Save:** Results are automatically saved to the `outputs` folder with timestamps.
-- 🛠️ **Windows Optimized:** Fixes common pathing and dependency issues found in the official repo.
+- 🛑 **VRAM Friendly:** Includes a Shutdown button to instantly close the server and free up GPU memory.
+- 🛠️ **Windows Optimized:** Fixes common pathing and dependency issues for NVIDIA RTX 50 series.
 
 ## ⚙️ Installation
 
