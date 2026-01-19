@@ -78,3 +78,11 @@ All generated images are saved in the `outputs` folder inside the installation d
 
 * Original VIBE Model: ai-forever/VIBE
 * Model Weights: Hugging Face
+
+## 🤝 Support
+
+This is a free open-source project. I don't ask for donations.
+However, if you want to say "Thanks", check out my profile on **Spotify**.
+A follow or a listen is the best way to support me! 🎧
+
+👉 [Listen to my Music on Spotify](https://open.spotify.com/artist/7EdK2cuIo7xTAacutHs9gv?si=C99w8i5jRBKwcjutpIWInQ)
