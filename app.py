@@ -6,54 +6,56 @@ import os
 import time
 import random
 
-# --- KONFIGURATION ---
-# Wir nutzen relative Pfade, damit es auf jedem PC funktioniert
+# --- CONFIGURATION ---
+# Using relative paths for cross-platform compatibility
 BASE_DIR = os.getcwd()
 OUTPUT_DIR = os.path.join(BASE_DIR, "outputs")
-# Das Modell wird im Cache oder lokal gesucht
+# Looking for local model folder or fallback to HuggingFace
 MODEL_PATH = "VIBE_Model" 
 
-# Ordner erstellen
+# Create output directory if it doesn't exist
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
-# --- MODELL LADEN ---
-print("Starte GUI...")
+# --- LOAD MODEL ---
+print("Starting GUI...")
 device = "cuda" if torch.cuda.is_available() else "cpu"
-print(f"Gerät erkannt: {device}")
+print(f"Device detected: {device}")
 
-# Checkpoint Pfad Logik:
-# Wenn der Ordner "VIBE_Model" existiert, nimm ihn (Offline Modus).
-# Wenn nicht, lädt er es neu von HuggingFace (Online Modus).
+# Checkpoint path logic:
+# Use local "VIBE_Model" if exists, otherwise download from HuggingFace
 checkpoint = MODEL_PATH if os.path.exists(MODEL_PATH) else "iitolstykh/VIBE-Image-Edit"
 
-print(f"Lade Modell von: {checkpoint}")
+print(f"Loading model from: {checkpoint}")
 try:
     editor = ImageEditor(checkpoint_path=checkpoint)
-    # Kleiner Hack: Wir greifen direkt auf die Pipe zu, um Zugriff auf Generator/Steps zu haben
-    # Das initialisiert das Modell auf der GPU
+    # Move the pipeline to the detected device
     _ = editor.pipe.to(device)
 except Exception as e:
-    print(f"Fehler beim Laden des Modells: {e}")
-    print("Stelle sicher, dass du 'pip install git+https://github.com/ai-forever/VIBE' ausgeführt hast.")
+    print(f"Error loading model: {e}")
+    print("Make sure you have installed: pip install git+https://github.com/ai-forever/VIBE")
     exit()
 
-print("Bereit! Starte Oberfläche...")
+print("Ready! Launching interface...")
 
-# --- DIE FUNKTION ---
-def verarbeite_bild(input_image, instruction, steps, guidance_scale, image_guidance_scale, seed):
+# --- CORE FUNCTION ---
+def process_image(input_image, instruction, steps, guidance_scale, image_guidance_scale, seed):
     if input_image is None:
-        return None
+        return None, "No image uploaded"
     
+    # Convert numpy array to PIL Image
     image = Image.fromarray(input_image).convert("RGB")
     
+    # Random seed handling
     if seed == -1:
         seed = random.randint(0, 2147483647)
     
-    print(f"Generiere: '{instruction}' | Seed: {seed} | Steps: {steps}")
+    print(f"Generating: '{instruction}' | Seed: {seed} | Steps: {steps}")
 
+    # Initialize generator for reproducibility
     generator = torch.Generator(device=device).manual_seed(int(seed))
     
     try:
+        # Calling the pipeline directly for advanced parameter support
         edited_image = editor.pipe(
             prompt=instruction,
             conditioning_image=image,
@@ -63,17 +65,19 @@ def verarbeite_bild(input_image, instruction, steps, guidance_scale, image_guida
             generator=generator
         ).images[0]
         
+        # Save logic
         timestamp = time.strftime("%Y%m%d-%H%M%S")
         filename = f"VIBE_{timestamp}_seed{seed}.jpg"
         save_path = os.path.join(OUTPUT_DIR, filename)
         
         edited_image.save(save_path, quality=100)
-        return edited_image, save_path
+        return edited_image, f"Saved to: {save_path}"
         
     except Exception as e:
-        return None, f"Fehler: {str(e)}"
+        print(f"Generation error: {str(e)}")
+        return None, f"Error: {str(e)}"
 
-# --- GUI ---
+# --- INTERFACE (GRADIO) ---
 with gr.Blocks(title="VIBE Local GUI") as demo:
     gr.Markdown("# 🎨 VIBE Image Editor (Local)")
     
@@ -83,6 +87,7 @@ with gr.Blocks(title="VIBE Local GUI") as demo:
             prompt = gr.Textbox(label="Instruction", placeholder="e.g. Make it look like a pencil sketch", value="make it night time")
             
             with gr.Group():
+                gr.Markdown("### Settings")
                 steps = gr.Slider(minimum=1, maximum=100, value=20, step=1, label="Sample Steps")
                 g_scale = gr.Slider(minimum=0.1, maximum=30, value=4.5, step=0.1, label="Guidance Scale (Text Strength)")
                 i_scale = gr.Slider(minimum=0.1, maximum=30, value=1.2, step=0.1, label="Image Guidance Scale (Original Fidelity)")
@@ -94,8 +99,9 @@ with gr.Blocks(title="VIBE Local GUI") as demo:
             output_img = gr.Image(label="Result")
             status_text = gr.Textbox(label="Status / Save Path", interactive=False)
 
+    # Link button to function
     submit_btn.click(
-        fn=verarbeite_bild,
+        fn=process_image,
         inputs=[input_img, prompt, steps, g_scale, i_scale, seed],
         outputs=[output_img, status_text]
     )
