@@ -19,5 +19,5 @@ Tested on Windows 11 with RTX 5090 (Blackwell architecture).
 
 2. **Clone this repo**
    ```bash
-   git clone <DEIN_GITHUB_LINK_HIER>
+   git clone [<DEIN_GITHUB_LINK_HIER>](https://github.com/Detoxfox4234/VIBE-Local-GUI-Windows.git)
    cd VIBE-Local-GUI
