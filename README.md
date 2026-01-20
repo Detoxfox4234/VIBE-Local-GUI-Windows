@@ -4,7 +4,7 @@ A local Gradio Web-UI for the [VIBE model](https://huggingface.co/iitolstykh/VIB
 
 **Tested on Windows 11 with NVIDIA RTX 5090 (Blackwell architecture).**
 
-![Preview](preview2.png)
+![Preview](preview.png)
 *(Run your own local instance with full privacy and speed)*
 
 ## 🖼️ Examples
@@ -34,6 +34,7 @@ A local Gradio Web-UI for the [VIBE model](https://huggingface.co/iitolstykh/VIB
 
 ## ✨ Features
 - 🚀 **Runs Locally:** Fast, private, and no limits.
+- 📊 **Real-Time Monitor:** **(New in v1.1)** Live display of CPU, RAM, and VRAM usage directly in the UI.
 - 🎛️ **Full Control:** Adjust `Sample Steps`, `Seed`, `Guidance Scale`, and `Image Guidance`.
 - 💾 **Auto-Save:** Results are automatically saved to the `outputs` folder with timestamps.
 - 🛑 **VRAM Friendly:** Includes a Shutdown button to instantly close the server and free up GPU memory.
