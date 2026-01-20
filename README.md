@@ -13,22 +13,22 @@ A local Gradio Web-UI for the [VIBE model](https://huggingface.co/iitolstykh/VIB
 <summary>👁️ Click here to see more examples</summary>
 
 ### Object Interaction
-![Example 6](examples/example6.png)
+![Example 6](examples/example_6.png)
 
 ### Change Appearance
-![Example 5](examples/example5.png)
+![Example 5](examples/example_5.png)
 
 ### Text Removal
-![Example 4](examples/example4.png)
+![Example 4](examples/example_4.png)
 
 ### Object Interaction
-![Example 3](examples/example3.png)
+![Example 3](examples/example_3.png)
 
 ### Watermark Removal
-![Example 2](examples/example2.png)
+![Example 2](examples/example_2.png)
 
 ### Watermark Removal
-![Example 1](examples/example1.png)
+![Example 1](examples/example_1.png)
 
 </details>
 
