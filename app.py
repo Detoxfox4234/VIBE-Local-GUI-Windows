@@ -6,6 +6,7 @@ import os
 import time
 import random
 import sys
+import psutil # <--- NEU: Für CPU/RAM Daten
 
 # --- CONFIGURATION ---
 BASE_DIR = os.getcwd()
@@ -38,6 +39,37 @@ def shutdown_server():
     """Stops the process and releases VRAM immediately."""
     print("Shutting down... Releasing VRAM.")
     os._exit(0)
+
+# --- NEU: SYSTEM MONITOR FUNKTION ---
+def get_system_stats():
+    """Reads CPU, RAM, and VRAM usage."""
+    # CPU & RAM
+    cpu_usage = psutil.cpu_percent(interval=None)
+    ram_usage = psutil.virtual_memory().percent
+    
+    # VRAM (NVIDIA only)
+    vram_display = "N/A"
+    if torch.cuda.is_available():
+        # Get free/total memory
+        free_mem, total_mem = torch.cuda.mem_get_info()
+        # Calculate used memory
+        used_mem = total_mem - free_mem
+        
+        # Convert to GB
+        used_gb = used_mem / (1024**3)
+        total_gb = total_mem / (1024**3)
+        percent = (used_mem / total_mem) * 100
+        
+        vram_display = f"{used_gb:.1f}GB / {total_gb:.1f}GB ({percent:.0f}%)"
+    
+    # Return HTML for nicer formatting
+    return f"""
+    <div style="display: flex; gap: 24px; font-family: monospace; font-size: 20px; color: #eee; font-weight: bold; align-items: center;">
+        <span>🖥️ CPU: {cpu_usage}%</span>
+        <span>🧠 RAM: {ram_usage}%</span>
+        <span>🎮 VRAM: {vram_display}</span>
+    </div>
+    """
 
 def process_image(input_image, instruction, steps, guidance_scale, image_guidance_scale, seed):
     if input_image is None:
@@ -75,12 +107,16 @@ def process_image(input_image, instruction, steps, guidance_scale, image_guidanc
 
 # --- GUI LAYOUT ---
 with gr.Blocks(title="VIBE Local GUI") as demo:
-    gr.Markdown("# 🎨 VIBE Image Editor (Local)")
     
+    # HEADER ROW
+    with gr.Row(variant="compact"):
+        gr.Markdown("# 🎨 VIBE Image Editor (Local)")
+        # Hier ist die neue Monitor-Anzeige (oben rechts)
+        system_stats = gr.HTML(value="Loading stats...")
+
     with gr.Row():
         with gr.Column():
             input_img = gr.Image(label="Input Image", type="numpy")
-            # --- IMPROVED TEXTBOX ---
             prompt = gr.Textbox(
                 label="Instruction", 
                 placeholder="e.g. Change the background to a snowy mountain or make it look like a pencil sketch",
@@ -106,7 +142,12 @@ with gr.Blocks(title="VIBE Local GUI") as demo:
             gr.Markdown("### 🎧 Support the Creator")
             gr.Markdown("If you find this tool helpful, feel free to support me by following my [Spotify](https://open.spotify.com/artist/7EdK2cuIo7xTAacutHs9gv?si=BgHnU-sxRmOxfHHsqMnlqg) profile. Every listen counts!")
 
-    # Event Handlers
+    # --- TIMER & EVENTS ---
+    
+    # Dieser Timer updated die Stats jede Sekunde (1.0)
+    timer = gr.Timer(1.0)
+    timer.tick(fn=get_system_stats, outputs=system_stats)
+
     submit_btn.click(
         fn=process_image,
         inputs=[input_img, prompt, steps, g_scale, i_scale, seed],
