@@ -6,7 +6,7 @@ import os
 import time
 import random
 import sys
-import psutil # <--- NEU: Für CPU/RAM Daten
+import psutil # <--- NEW: For CPU/RAM Data
 
 # --- CONFIGURATION ---
 BASE_DIR = os.getcwd()
@@ -40,7 +40,7 @@ def shutdown_server():
     print("Shutting down... Releasing VRAM.")
     os._exit(0)
 
-# --- NEU: SYSTEM MONITOR FUNKTION ---
+# --- NEW: SYSTEM MONITOR FUNCTION ---
 def get_system_stats():
     """Reads CPU, RAM, and VRAM usage."""
     # CPU & RAM
@@ -138,13 +138,16 @@ with gr.Blocks(title="VIBE Local GUI") as demo:
             output_img = gr.Image(label="Result")
             status_text = gr.Textbox(label="Status & File Path", interactive=False)
             
-            gr.Markdown("---")
-            gr.Markdown("### 🎧 Support the Creator")
-            gr.Markdown("If you find this tool helpful, feel free to support me by following my [Spotify](https://open.spotify.com/artist/7EdK2cuIo7xTAacutHs9gv?si=BgHnU-sxRmOxfHHsqMnlqg) profile. Every listen counts!")
-
+            gr.Markdown(
+                """
+                If you find this tool helpful, feel free to support me by following my 
+                <a href="https://open.spotify.com/artist/7EdK2cuIo7xTAacutHs9gv?si=5d3AbCKgR3GemCemctb8FA" target="_blank" style="color: #1DB954; font-weight: bold; text-decoration: none;">Spotify</a> 
+                profile. Every follower counts!
+                """
+            )
     # --- TIMER & EVENTS ---
     
-    # Dieser Timer updated die Stats jede Sekunde (1.0)
+    # The timer updates every second (1.0)
     timer = gr.Timer(1.0)
     timer.tick(fn=get_system_stats, outputs=system_stats)
 
