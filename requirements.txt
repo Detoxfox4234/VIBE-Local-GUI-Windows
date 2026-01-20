@@ -8,3 +8,4 @@ huggingface_hub
 accelerate
 diffusers
 transformers
+psutil
