@@ -8,31 +8,6 @@ Tested on Windows 11 with NVIDIA RTX GPUs (Optimized for Blackwell).
 ![Preview](preview.png)
 *(Run your own local instance with full privacy and speed)*
 
-## 🖼️ Examples
-
-<details>
-<summary>👁️ Click here to see more examples</summary>
-
-### Object Interaction
-![Example 6](examples/example_6.png)
-
-### Change Appearance
-![Example 5](examples/example_5.png)
-
-### Text Removal
-![Example 4](examples/example_4.png)
-
-### Object Interaction
-![Example 3](examples/example_3.png)
-
-### Watermark Removal
-![Example 2](examples/example_2.png)
-
-### Watermark Removal
-![Example 1](examples/example_1.png)
-
-</details>
-
 ## ✨ New in v2.0
 
 * **Sana1.5 Engine**: Features linear attention for rapid generation and lower VRAM usage.
