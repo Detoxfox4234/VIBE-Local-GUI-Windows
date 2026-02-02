@@ -1,0 +1,15 @@
+--extra-index-url https://download.pytorch.org/whl/nightly/cu128
+torch
+torchvision
+torchaudio
+gradio
+git+https://github.com/ai-forever/VIBE
+pillow
+huggingface_hub
+accelerate
+diffusers==0.33.1
+transformers==4.57.1
+loguru==0.7.3
+psutil
+pyautogui
+qwen-vl-utils
